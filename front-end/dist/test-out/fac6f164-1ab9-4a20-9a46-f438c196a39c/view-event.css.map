@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/app/features/event/view-event/view-event.css"],
-  "sourcesContent": [":host {\n  display: flex;\n  flex-direction: column;\n  min-height: 100vh;\n}\n\n.container {\n  flex: 1;\n}\n\n.card {\n  max-width: 900px;\n  margin: 0 auto;\n}"],
-  "mappings": ";AAAA;AACE,WAAS;AACT,kBAAgB;AAChB,cAAY;AACd;AAEA,CAAC;AACC,QAAM;AACR;AAEA,CAAC;AACC,aAAW;AACX,UAAQ,EAAE;AACZ;",
-  "names": []
-}

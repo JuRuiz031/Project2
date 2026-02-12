@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/app/features/calendar/calendar-selector-modal/calendar-selector-modal.spec.ts"],
-  "sourcesContent": ["import { describe, it, expect } from 'vitest';\nimport { CalendarSelectorModal } from './calendar-selector-modal';\n\ndescribe('CalendarSelectorModal', () => {\n  it('should create', () => {\n    const cmp = new CalendarSelectorModal();\n    expect(cmp).toBeTruthy();\n  });\n});\n"],
-  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AACA;AAEA,SAAS,yBAAyB,MAAK;AACrC,KAAG,iBAAiB,MAAK;AACvB,UAAM,MAAM,IAAI,sBAAqB;AACrC,iBAAO,GAAG,EAAE,WAAU;EACxB,CAAC;AACH,CAAC;",
-  "names": []
-}

@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/app/features/calendar/edit-calendar-modal/edit-calendar-modal.css"],
-  "sourcesContent": [".card {\n  max-width: 900px;\n  margin: 0 auto;\n}\n\n.user-row {\n  cursor: pointer;\n  user-select: none;\n}\n\n.user-row--selected {\n  background-color: #e3f2fd;\n  border-color: #90caf9;\n}\n\n.user-row--selected:hover {\n  background-color: #bbdefb;\n}\n\n.badge {\n  white-space: nowrap;\n}\n"],
-  "mappings": ";AAAA,CAAC;AACC,aAAW;AACX,UAAQ,EAAE;AACZ;AAEA,CAAC;AACC,UAAQ;AACR,uBAAa;AAAb,eAAa;AACf;AAEA,CAAC;AACC,oBAAkB;AAClB,gBAAc;AAChB;AAEA,CALC,kBAKkB;AACjB,oBAAkB;AACpB;AAEA,CAAC;AACC,eAAa;AACf;",
-  "names": []
-}

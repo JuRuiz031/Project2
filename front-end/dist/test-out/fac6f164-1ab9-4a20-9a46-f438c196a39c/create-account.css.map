@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/app/features/auth/create-account/create-account.css"],
-  "sourcesContent": [".card {\n  max-width: 900px;\n  margin: 0 auto;\n}"],
-  "mappings": ";AAAA,CAAC;AACC,aAAW;AACX,UAAQ,EAAE;AACZ;",
-  "names": []
-}

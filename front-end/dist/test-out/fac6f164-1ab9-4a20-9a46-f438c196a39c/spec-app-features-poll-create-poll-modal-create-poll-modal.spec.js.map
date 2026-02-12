@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/app/features/poll/create-poll-modal/create-poll-modal.spec.ts"],
-  "sourcesContent": ["import { ComponentFixture, TestBed } from '@angular/core/testing';\n\nimport { CreatePollModal } from './create-poll-modal';\n\ndescribe('CreatePoll', () => {\n  let component: CreatePollModal;\n  let fixture: ComponentFixture<CreatePollModal>;\n\n  beforeEach(async () => {\n    await TestBed.configureTestingModule({\n      imports: [CreatePollModal]\n    })\n    .compileComponents();\n\n    fixture = TestBed.createComponent(CreatePollModal);\n    component = fixture.componentInstance;\n    await fixture.whenStable();\n  });\n\n  it('should create', () => {\n    expect(component).toBeTruthy();\n  });\n});\n"],
-  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;AAAA;;;AAEA;AAEA,aAAS,cAAc,MAAK;AAC1B,UAAI;AACJ,UAAI;AAEJ,iBAAW,MAAW;AACpB,cAAM,QAAQ,uBAAuB;UACnC,SAAS,CAAC,eAAe;SAC1B,EACA,kBAAiB;AAElB,kBAAU,QAAQ,gBAAgB,eAAe;AACjD,oBAAY,QAAQ;AACpB,cAAM,QAAQ,WAAU;MAC1B,EAAC;AAED,SAAG,iBAAiB,MAAK;AACvB,eAAO,SAAS,EAAE,WAAU;MAC9B,CAAC;IACH,CAAC;;;",
-  "names": []
-}
