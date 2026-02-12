@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/features/dashboard/main-page/components/polls-window/polls-window.css"],
+  "sourcesContent": [".polls-window__title {\n  margin: 0 0 12px 0;\n  font-size: 14px;\n  font-weight: 700;\n}\n\n.polls-window__panel {\n  border: 1px solid var(--color-border-default);\n  border-radius: 12px;\n  background: #fff;\n  min-height: 180px;\n  display: grid;\n  place-items: center;\n  margin-bottom: 12px;\n}\n\n.polls-window__placeholder {\n  opacity: 0.65;\n  font-weight: 600;\n  text-align: center;\n}\n\n.polls-window__actions {\n  display: grid;\n  grid-template-columns: 1fr 1fr;\n  gap: 10px;\n}\n\n.polls-window__btn {\n  border: 1px solid var(--color-border-default);\n  background: #fff;\n  border-radius: 10px;\n  padding: 10px 12px;\n  cursor: pointer;\n}\n\n.polls-window__btn:hover {\n  border-color: var(--color-accent-primary);\n}\n\n@media (max-width: 900px) {\n  .polls-window__actions {\n    grid-template-columns: 1fr;\n  }\n}\n"],
+  "mappings": ";AAAA,CAAC;AACC,UAAQ,EAAE,EAAE,KAAK;AACjB,aAAW;AACX,eAAa;AACf;AAEA,CAAC;AACC,UAAQ,IAAI,MAAM,IAAI;AACtB,iBAAe;AACf,cAAY;AACZ,cAAY;AACZ,WAAS;AACT,eAAa;AACb,iBAAe;AACjB;AAEA,CAAC;AACC,WAAS;AACT,eAAa;AACb,cAAY;AACd;AAEA,CAAC;AACC,WAAS;AACT,yBAAuB,IAAI;AAC3B,OAAK;AACP;AAEA,CAAC;AACC,UAAQ,IAAI,MAAM,IAAI;AACtB,cAAY;AACZ,iBAAe;AACf,WAAS,KAAK;AACd,UAAQ;AACV;AAEA,CARC,iBAQiB;AAChB,gBAAc,IAAI;AACpB;AAEA,QAAO,WAAY;AACjB,GAnBD;AAoBG,2BAAuB;AACzB;AACF;",
+  "names": []
+}

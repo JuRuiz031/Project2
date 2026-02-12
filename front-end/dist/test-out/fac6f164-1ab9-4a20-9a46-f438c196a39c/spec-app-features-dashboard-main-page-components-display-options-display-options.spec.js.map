@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/features/dashboard/main-page/components/display-options/display-options.spec.ts"],
+  "sourcesContent": ["import { ComponentFixture, TestBed } from '@angular/core/testing';\nimport { DisplayOptions } from './display-options';\n\ndescribe('DisplayOptions', () => {\n  let component: DisplayOptions;\n  let fixture: ComponentFixture<DisplayOptions>;\n\n  beforeEach(async () => {\n    await TestBed.configureTestingModule({\n      imports: [DisplayOptions],\n    }).compileComponents();\n\n    fixture = TestBed.createComponent(DisplayOptions);\n    component = fixture.componentInstance;\n    await fixture.whenStable();\n  });\n\n  it('should create', () => {\n    expect(component).toBeTruthy();\n  });\n});\n"],
+  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;;;AACA;AAEA,aAAS,kBAAkB,MAAK;AAC9B,UAAI;AACJ,UAAI;AAEJ,iBAAW,MAAW;AACpB,cAAM,QAAQ,uBAAuB;UACnC,SAAS,CAAC,cAAc;SACzB,EAAE,kBAAiB;AAEpB,kBAAU,QAAQ,gBAAgB,cAAc;AAChD,oBAAY,QAAQ;AACpB,cAAM,QAAQ,WAAU;MAC1B,EAAC;AAED,SAAG,iBAAiB,MAAK;AACvB,eAAO,SAAS,EAAE,WAAU;MAC9B,CAAC;IACH,CAAC;;;",
+  "names": []
+}

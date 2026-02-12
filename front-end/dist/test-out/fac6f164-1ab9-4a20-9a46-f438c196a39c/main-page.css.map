@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/features/dashboard/main-page/main-page.css"],
+  "sourcesContent": ["/* Page scaffold */\n.page {\n  min-height: calc(100vh - 120px); /* header + footer room (approx) */\n  padding: 20px;\n  background: var(--color-background-primary);\n  color: var(--color-text-primary);\n}\n\n/* Main two-column layout */\n.layout {\n  display: grid;\n  grid-template-columns: 1fr minmax(280px, 360px);\n  gap: 20px;\n  align-items: start;\n}\n\n/* Side panel stack */\n.side {\n  display: grid;\n  gap: 20px;\n}\n\n/* Shared card styling (wireframe boxes) */\n.card {\n  border: 1px solid var(--color-border-default);\n  background: var(--color-background-primary);\n  border-radius: 10px;\n  padding: 16px;\n  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);\n}\n\n/* Calendar area should be visually dominant */\n.card--calendar {\n  min-height: 640px;\n}\n\n/* Responsive: stack side panel below on narrow screens */\n@media (max-width: 900px) {\n  .layout {\n    grid-template-columns: 1fr;\n  }\n\n  .card--calendar {\n    min-height: 520px;\n  }\n}\n"],
+  "mappings": ";AACA,CAAC;AACC,cAAY,KAAK,MAAM,EAAE;AACzB,WAAS;AACT,cAAY,IAAI;AAChB,SAAO,IAAI;AACb;AAGA,CAAC;AACC,WAAS;AACT,yBAAuB,IAAI,OAAO,KAAK,EAAE;AACzC,OAAK;AACL,eAAa;AACf;AAGA,CAAC;AACC,WAAS;AACT,OAAK;AACP;AAGA,CAAC;AACC,UAAQ,IAAI,MAAM,IAAI;AACtB,cAAY,IAAI;AAChB,iBAAe;AACf,WAAS;AACT,cAAY,EAAE,IAAI,IAAI,KAAK,CAAC,EAAE,CAAC,EAAE,CAAC,EAAE;AACtC;AAGA,CAAC;AACC,cAAY;AACd;AAGA,QAAO,WAAY;AACjB,GA7BD;AA8BG,2BAAuB;AACzB;AAEA,GAVD;AAWG,gBAAY;AACd;AACF;",
+  "names": []
+}

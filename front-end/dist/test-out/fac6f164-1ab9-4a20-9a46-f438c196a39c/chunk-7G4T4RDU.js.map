@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/config/brand.config.ts"],
+  "sourcesContent": ["export const BRAND_CONFIG = {\n  siteName: 'CalendarIO',\n  footerText: 'Revature 12 Week Training - Team 2 - Project 1',\n};"],
+  "mappings": ";;;;;AAAA,IAAa;AAAb;;;AAAO,IAAM,eAAe;MAC1B,UAAU;MACV,YAAY;;;;",
+  "names": []
+}

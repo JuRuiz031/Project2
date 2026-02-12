@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/features/dashboard/main-page/components/calendar-options/calendar-options.css"],
+  "sourcesContent": [".calendar-options-card {\n  max-width: 900px;\n  margin: 0 auto;\n}\n"],
+  "mappings": ";AAAA,CAAC;AACC,aAAW;AACX,UAAQ,EAAE;AACZ;",
+  "names": []
+}

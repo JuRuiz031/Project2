@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/features/shared/main-footer/main-footer.ts", "src/app/features/shared/main-footer/main-footer.html"],
+  "sourcesContent": ["import { Component } from '@angular/core';\nimport { BRAND_CONFIG } from '../../../config/brand.config';\n\n@Component({\n  selector: 'app-main-footer',\n  standalone: true,\n  imports: [],\n  templateUrl: './main-footer.html',\n  styleUrl: './main-footer.css',\n})\nexport class MainFooter {\n  readonly footerText = BRAND_CONFIG.footerText;\n}\n", "<footer class=\"app-footer\" role=\"contentinfo\">\n  <div class=\"container-fluid px-3 py-2\">\n    <div class=\"app-footer__text\">\n      {{ footerText }}\n    </div>\n  </div>\n</footer>\n"],
+  "mappings": ";;;;;;;;;;;;;;;;;;;;;AAAA,IAUa;AAVb;;;;AACA;;AASM,IAAO,aAAP,MAAO,YAAU;MACZ,aAAa,aAAa;;yCADxB,aAAU;MAAA;6EAAV,aAAU,WAAA,CAAA,CAAA,iBAAA,CAAA,GAAA,OAAA,GAAA,MAAA,GAAA,QAAA,CAAA,CAAA,QAAA,eAAA,GAAA,YAAA,GAAA,CAAA,GAAA,mBAAA,QAAA,MAAA,GAAA,CAAA,GAAA,kBAAA,CAAA,GAAA,UAAA,SAAA,oBAAA,IAAA,KAAA;AAAA,YAAA,KAAA,GAAA;ACVvB,UAAA,4BAAA,GAAA,UAAA,CAAA,EAA8C,GAAA,OAAA,CAAA,EACL,GAAA,OAAA,CAAA;AAEnC,UAAA,iBAAA,CAAA;AACF,UAAA,0BAAA,EAAM,EACF;;;AAFF,UAAA,oBAAA,CAAA;AAAA,UAAA,6BAAA,KAAA,IAAA,YAAA,GAAA;;;;;0EDOO,YAAU,CAAA;cAPtB;2BACW,mBAAiB,YACf,MAAI,SACP,CAAA,GAAE,UAAA,4LAAA,QAAA,CAAA,yIAAA,EAAA,CAAA;;;;iFAIA,YAAU,EAAA,WAAA,cAAA,UAAA,sDAAA,YAAA,GAAA,CAAA;IAAA,GAAA;;;",
+  "names": []
+}

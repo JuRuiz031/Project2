@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/features/poll/delete-poll/delete-poll.css"],
+  "sourcesContent": [".card {\n  max-width: 400px;\n  margin: 0 auto;\n}\n\n.delete-poll__message {\n  text-align: center;\n  font-size: 1rem;\n  line-height: 1.4;\n}\n\n.card-body {\n  padding: 32px 24px;\n}\n"],
+  "mappings": ";AAAA,CAAC;AACC,aAAW;AACX,UAAQ,EAAE;AACZ;AAEA,CAAC;AACC,cAAY;AACZ,aAAW;AACX,eAAa;AACf;AAEA,CAAC;AACC,WAAS,KAAK;AAChB;",
+  "names": []
+}
