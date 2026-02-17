@@ -19,7 +19,6 @@ import com.example.polls_microservice.exception.ForbiddenException;
 import com.example.polls_microservice.exception.InvalidRequestException;
 import com.example.polls_microservice.exception.ResourceNotFoundException;
 import com.example.polls_microservice.model.Poll;
-import com.example.polls_microservice.model.User;
 import com.example.polls_microservice.repository.PollRepository;
 
 @Service
@@ -168,12 +167,68 @@ public class PollService {
     }
   }
 
-  private void applyOptionsUpdate(Poll existing, List<PollOptionDTO> options) {
-    // du kannst hier deine vorhandene Logik praktisch 1:1 behalten
-  }
+  private void applyOptionsUpdate(Poll existing, List<PollOptionDTO> incoming) {
+    if (incoming == null) return;
+
+    Map<Integer, Poll.Option> map = existing.getOptionsMap();
+    Set<Integer> originalIds = new HashSet<>(map.keySet());
+    Set<Integer> incomingIds = new HashSet<>();
+
+    for (PollOptionDTO opt : incoming) {
+        if (opt == null) continue;
+
+        Integer id = opt.getOptionId();
+        String desc = opt.getDescription();
+
+        if (id == null) {
+            if (desc != null && !desc.isBlank()) {
+                existing.addOption(desc, opt.getUserVotes(), opt.getGuestVotes());
+            }
+        } else {
+            incomingIds.add(id);
+            Poll.Option existingOpt = map.get(id);
+            if (existingOpt != null) {
+                if (desc != null && !desc.isBlank()) existingOpt.setDescription(desc);
+                if (opt.getUserVotes() != null) existingOpt.setUserVotes(opt.getUserVotes());
+                if (opt.getGuestVotes() != null) existingOpt.setGuestVotes(opt.getGuestVotes());
+            }
+        }
+    }
+
+    for (Integer originalId : originalIds) {
+        if (!incomingIds.contains(originalId)) {
+            existing.removeOption(originalId);
+        }
+    }
+}
+
 
   private PollResponseDTO toResponse(Poll p) {
-    // deine Mapping-Logik ist ok; evtl. in Mapper auslagern
-    return /* ... */;
-  }
+    List<PollOptionDTO> options = null;
+    if (p.getOptions() != null) {
+        options = p.getOptions().stream().map(o -> {
+            PollOptionDTO dto = new PollOptionDTO();
+            dto.setOptionId(o.getOptionId());
+            dto.setDescription(o.getDescription());
+            dto.setUserVotes(o.getUserVotes());
+            dto.setGuestVotes(o.getGuestVotes());
+            return dto;
+        }).toList();
+    }
+
+    return new PollResponseDTO(
+        p.getId(),
+        p.getCalendarId(),
+        p.getTitle(),
+        p.getDescription(),
+        p.getNotes(),
+        p.getStartTime(),
+        p.getEndTime(),
+        p.isResultsVisible(),
+        p.isAllowMultipleVotes(),
+        options,
+        p.getTags()
+    );
+}
+
 }
