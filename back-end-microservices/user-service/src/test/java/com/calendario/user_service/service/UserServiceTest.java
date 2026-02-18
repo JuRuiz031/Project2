@@ -347,7 +347,7 @@ class UserServiceTest {
     @Test
     void testGetUsersByCalendarMembership_Success() {
         List<User> users = List.of(testUser);
-        when(userRepository.findByCalendarMembership("cal123")).thenReturn(users);
+        when(userRepository.findByCalendarIdsMembershipCalendarId("cal123")).thenReturn(users);
 
         List<User> result = userService.getUsersByCalendarMembership("cal123");
 
@@ -358,7 +358,7 @@ class UserServiceTest {
 
     @Test
     void testGetUsersByCalendarMembership_EmptyList() {
-        when(userRepository.findByCalendarMembership("cal123")).thenReturn(new ArrayList<>());
+        when(userRepository.findByCalendarIdsMembershipCalendarId("cal123")).thenReturn(new ArrayList<>());
 
         List<User> result = userService.getUsersByCalendarMembership("cal123");
 
