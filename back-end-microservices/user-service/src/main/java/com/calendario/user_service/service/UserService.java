@@ -150,4 +150,18 @@ public class UserService {
     public List<User> getUsersByCalendarMembership(String calendarId) {
         return userRepository.findByCalendarMembership(calendarId);
     }
+
+    public void addCalendarMembership(String userId, String calendarId, Boolean isAdmin) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + userId));
+        user.addCalendarMembership(calendarId, isAdmin);
+        userRepository.save(user);
+    }
+
+    public void removeCalendarMembership(String userId, String calendarId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + userId));
+        user.removeCalendarMembership(calendarId);
+        userRepository.save(user);
+    }
 }

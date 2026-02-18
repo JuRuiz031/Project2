@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.calendario.user_service.dto.CalendarMembershipDTO;
 import com.calendario.user_service.dto.UserDeleteResponseDTO;
 import com.calendario.user_service.dto.UserInternalDTO;
 import com.calendario.user_service.dto.UserRegistrationDTO;
@@ -72,5 +73,31 @@ public class UserController {
         User user = userService.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
         return ResponseEntity.ok(new UserInternalDTO(user));
+    }
+
+    // POST Internal: add calendar membership to a user (called by calendar-service)
+    @PostMapping("/internal/users/{userId}/calendars")
+    public ResponseEntity<Void> addCalendarMembership(
+            @PathVariable String userId,
+            @RequestBody CalendarMembershipDTO dto) {
+        userService.addCalendarMembership(userId, dto.calendarId(), dto.isAdmin());
+        return ResponseEntity.ok().build();
+    }
+
+    // POST Internal: remove calendar membership from a user (called by calendar-service)
+    @PostMapping("/internal/users/{userId}/calendars/remove")
+    public ResponseEntity<Void> removeCalendarMembership(
+            @PathVariable String userId,
+            @RequestBody CalendarMembershipDTO dto) {
+        userService.removeCalendarMembership(userId, dto.calendarId());
+        return ResponseEntity.ok().build();
+    }
+
+    // GET Internal: get all users who are members of a calendar (called by calendar-service)
+    @GetMapping("/internal/calendars/{calendarId}/members")
+    public ResponseEntity<java.util.List<UserInternalDTO>> getMembersByCalendar(@PathVariable String calendarId) {
+        java.util.List<UserInternalDTO> members = userService.getUsersByCalendarMembership(calendarId)
+                .stream().map(UserInternalDTO::new).toList();
+        return ResponseEntity.ok(members);
     }
 }
