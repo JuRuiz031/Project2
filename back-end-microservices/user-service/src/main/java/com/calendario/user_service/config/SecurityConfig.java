@@ -44,8 +44,9 @@ public class SecurityConfig {
         http.authorizeHttpRequests(authz -> authz
                 // Internal endpoints called only by other microservices (no JWT required)
                 .requestMatchers("/internal/**").permitAll()
+                .requestMatchers("/api/v1/internal/**").permitAll()
                 // Public: user registration
-                .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/v1/users").permitAll()
+                .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/v1/users/register").permitAll()
                 // All other endpoints require authentication
                 .anyRequest().authenticated()
         );

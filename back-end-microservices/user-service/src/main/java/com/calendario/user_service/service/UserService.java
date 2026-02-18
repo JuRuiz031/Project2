@@ -12,6 +12,7 @@ import com.calendario.user_service.dto.CredentialCreateDTO;
 import com.calendario.user_service.dto.CredentialUpdateDTO;
 import com.calendario.user_service.dto.UserDeleteResponseDTO;
 import com.calendario.user_service.dto.UserRegistrationDTO;
+import com.calendario.user_service.dto.UserResponseDTO;
 import com.calendario.user_service.dto.UserUpdateDTO;
 import com.calendario.user_service.exception.DuplicateEmailException;
 import com.calendario.user_service.exception.DuplicateUsernameException;
@@ -31,7 +32,11 @@ public class UserService {
         this.authServiceClient = authServiceClient;
     }
 
-    public User registerUser(UserRegistrationDTO dto) {
+    private UserResponseDTO toUserResponseDTO(User user) {
+        return new UserResponseDTO(user.getId(), user.getUsername(), user.getEmail());
+    }
+
+    public UserResponseDTO registerUser(UserRegistrationDTO dto) {
         if (userRepository.existsByUsername(dto.username())) {
             throw new DuplicateUsernameException("Username already exists: " + dto.username());
         }
@@ -42,12 +47,16 @@ public class UserService {
         User newUser = new User(dto.username(), dto.email());
         User savedUser = userRepository.save(newUser);
 
-        // Create credentials in auth-service
-        authServiceClient.createCredentials(new CredentialCreateDTO(
-                dto.username(), dto.email(), dto.password(), savedUser.getId()
-        ));
+        try {
+            authServiceClient.createCredentials(new CredentialCreateDTO(
+                    dto.username(), dto.email(), dto.password(), savedUser.getId()
+            ));
+        } catch (Exception e) {
+            userRepository.delete(savedUser);
+            throw new RuntimeException("Failed to create credentials: " + e.getMessage());
+        }
 
-        return savedUser;
+        return toUserResponseDTO(savedUser);
     }
 
     public Optional<User> findById(String id) {
@@ -70,7 +79,7 @@ public class UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + requestedUserId));
     }
 
-    public User updateUser(String id, UserUpdateDTO dto, String authenticatedUsername) {
+    public UserResponseDTO updateUser(String id, UserUpdateDTO dto, String authenticatedUsername) {
         User authenticatedUser = userRepository.findByUsername(authenticatedUsername)
                 .orElseThrow(() -> new ResourceNotFoundException("Authenticated user not found"));
 
@@ -81,8 +90,8 @@ public class UserService {
         User userToUpdate = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        String newUsername = null;
-        String newEmail = null;
+        boolean needsCredentialUpdate = false;
+        CredentialUpdateDTO credentialUpdateDTO = new CredentialUpdateDTO(null, null, null);
 
         if (dto.username() != null && !dto.username().isEmpty()) {
             userRepository.findByUsername(dto.username()).ifPresent(existing -> {
@@ -91,7 +100,8 @@ public class UserService {
                 }
             });
             userToUpdate.setUsername(dto.username());
-            newUsername = dto.username();
+            credentialUpdateDTO = new CredentialUpdateDTO(dto.username(), credentialUpdateDTO.email(), credentialUpdateDTO.password());
+            needsCredentialUpdate = true;
         }
 
         if (dto.email() != null && !dto.email().isEmpty()) {
@@ -101,15 +111,21 @@ public class UserService {
                 }
             });
             userToUpdate.setEmail(dto.email());
-            newEmail = dto.email();
+            credentialUpdateDTO = new CredentialUpdateDTO(credentialUpdateDTO.username(), dto.email(), credentialUpdateDTO.password());
+            needsCredentialUpdate = true;
         }
 
         User updated = userRepository.save(userToUpdate);
 
-        // Sync credentials in auth-service
-        authServiceClient.updateCredentials(id, new CredentialUpdateDTO(newUsername, newEmail, dto.password()));
+        if (needsCredentialUpdate) {
+            try {
+                authServiceClient.updateCredentials(id, credentialUpdateDTO);
+            } catch (Exception e) {
+                System.err.println("Warning: Failed to update credentials in auth-service: " + e.getMessage());
+            }
+        }
 
-        return updated;
+        return toUserResponseDTO(updated);
     }
 
     public UserDeleteResponseDTO validateAndDeleteUser(String requestedUserId, String authenticatedUsername) {
@@ -123,10 +139,13 @@ public class UserService {
         User userToDelete = userRepository.findById(requestedUserId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + requestedUserId));
 
-        userRepository.delete(userToDelete);
+        try {
+            authServiceClient.deleteCredentials(userToDelete.getId());
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to delete credentials: " + e.getMessage());
+        }
 
-        // Remove credentials from auth-service
-        authServiceClient.deleteCredentials(requestedUserId);
+        userRepository.delete(userToDelete);
 
         return new UserDeleteResponseDTO(userToDelete.getId(), userToDelete.getUsername(), true);
     }
@@ -137,6 +156,10 @@ public class UserService {
 
     public Iterable<User> saveAllUsers(Iterable<User> users) {
         return userRepository.saveAll(users);
+    }
+
+    public Iterable<User> getAllUsers() {
+        return userRepository.findAll();
     }
 
     public List<String> getCalendarIdsForUser(String userId, String authenticatedUsername) {
