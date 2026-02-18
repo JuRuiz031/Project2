@@ -1,0 +1,39 @@
+package com.example.eventservice.model;
+
+import java.time.LocalDateTime;
+
+public class InviteLink {
+    private String token;
+    private LocalDateTime createdAt;
+    private LocalDateTime expiresAt;
+
+    public InviteLink() {}
+
+    public InviteLink(String token, LocalDateTime createdAt, LocalDateTime expiresAt) {
+        this.token = token;
+        this.createdAt = createdAt;
+        this.expiresAt = expiresAt;
+    }
+
+    public String getToken() { return token; }
+    public void setToken(String token) { this.token = token; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    public LocalDateTime getExpiresAt() { return expiresAt; }
+    public void setExpiresAt(LocalDateTime expiresAt) { this.expiresAt = expiresAt; }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        InviteLink other = (InviteLink) obj;
+        return token != null && token.equals(other.token);
+    }
+
+    @Override
+    public int hashCode() {
+        return token != null ? token.hashCode() : 0;
+    }
+}
