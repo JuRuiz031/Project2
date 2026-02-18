@@ -22,6 +22,9 @@ import com.calendario.user_service.service.UserService;
 
 import jakarta.validation.Valid;
 
+import org.springframework.validation.annotation.Validated;
+
+@Validated
 @RestController
 @RequestMapping("/api/v1")
 public class UserController {

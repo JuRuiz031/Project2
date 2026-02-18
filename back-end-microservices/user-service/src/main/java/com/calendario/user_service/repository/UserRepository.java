@@ -17,5 +17,5 @@ public interface UserRepository extends MongoRepository<User, String> {
     boolean existsByEmail(String email);
 
     @Query("{'calendarIds.calendarId': ?0}")
-    List<User> findByCalendarMembership(String calendarId);
+    List<User> findByCalendarIdsMembershipCalendarId(String calendarId);
 }

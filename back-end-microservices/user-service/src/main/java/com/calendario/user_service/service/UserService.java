@@ -171,7 +171,7 @@ public class UserService {
     }
 
     public List<User> getUsersByCalendarMembership(String calendarId) {
-        return userRepository.findByCalendarMembership(calendarId);
+        return userRepository.findByCalendarIdsMembershipCalendarId(calendarId);
     }
 
     public void addCalendarMembership(String userId, String calendarId, Boolean isAdmin) {
