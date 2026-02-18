@@ -212,6 +212,20 @@ services:
     networks:
       - calendario-network
 
+  # ── Front-end (Angular SSR) ────────────────────────────
+  frontend:
+    build: ../front-end/calendario
+    container_name: frontend
+    ports:
+      - "4000:4000"
+    environment:
+      - PORT=4000
+      - API_URL=http://api-gateway:8080
+    depends_on:
+      - api-gateway
+    networks:
+      - calendario-network
+
 # ── Volumes ───────────────────────────────────────────────
 volumes:
   mongo-auth-data:
