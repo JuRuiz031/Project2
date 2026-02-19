@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.calendario.polls_service.dto.PollCreateRequestDTO;
-import com.example.calendario.polls_service.dto.PollDeleteRequestDTO;
 import com.example.calendario.polls_service.dto.PollDeleteResponseDTO;
 import com.example.calendario.polls_service.dto.PollResponseDTO;
 import com.example.calendario.polls_service.dto.PollUpdateRequestDTO;
@@ -57,12 +56,11 @@ public class PollsController {
 	// DELETE Delete Poll
 	@DeleteMapping("/polls/{id}")
 	public ResponseEntity<PollDeleteResponseDTO> deletePoll(
-			@PathVariable("id") String pollId,
-			@Valid @RequestBody PollDeleteRequestDTO requestDTO) {
+			@PathVariable("id") String pollId) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String authenticatedUsername = authentication.getName();
 
-		PollDeleteResponseDTO response = pollService.deletePoll(pollId, requestDTO, authenticatedUsername);
+		PollDeleteResponseDTO response = pollService.deletePoll(pollId, authenticatedUsername);
 		return ResponseEntity.ok(response);
 	}
 

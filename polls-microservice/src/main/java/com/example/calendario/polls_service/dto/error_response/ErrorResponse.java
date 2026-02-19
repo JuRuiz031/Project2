@@ -1,4 +1,4 @@
-package com.example.polls_microservice.dto.error_response;
+package com.example.calendario.polls_service.dto.error_response;
 
 public class ErrorResponse {
     private String message;

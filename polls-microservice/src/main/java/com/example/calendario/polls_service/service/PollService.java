@@ -7,8 +7,8 @@ import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
+import com.example.calendario.polls_service.client.CalendarPermissionClient;
 import com.example.calendario.polls_service.dto.PollCreateRequestDTO;
-import com.example.calendario.polls_service.dto.PollDeleteRequestDTO;
 import com.example.calendario.polls_service.dto.PollDeleteResponseDTO;
 import com.example.calendario.polls_service.dto.PollOptionDTO;
 import com.example.calendario.polls_service.dto.PollResponseDTO;
