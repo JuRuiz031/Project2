@@ -1,21 +1,234 @@
 services:
-  mongodb:
-    image: mongo:7.0
-    container_name: calendario-mongodb
+
+  # ── MongoDB instances (one per service) ──────────────────
+  mongo-auth:
+    image: mongo:7
+    container_name: mongo-auth
     ports:
-      - "27017:27017"
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: password
-      MONGO_INITDB_DATABASE: calendario
+      - "27020:27017"
     volumes:
-      - mongo_data:/data/db
+      - mongo-auth-data:/data/db
+      - ./database-microservices/init/01-auth-db.js:/docker-entrypoint-initdb.d/01-auth-db.js:ro
     networks:
       - calendario-network
 
-volumes:
-  mongo_data:
+  mongo-users:
+    image: mongo:7
+    container_name: mongo-users
+    ports:
+      - "27021:27017"
+    volumes:
+      - mongo-users-data:/data/db
+      - ./database-microservices/init/02-users-db.js:/docker-entrypoint-initdb.d/02-users-db.js:ro
+    networks:
+      - calendario-network
 
+  mongo-calendars:
+    image: mongo:7
+    container_name: mongo-calendars
+    ports:
+      - "27022:27017"
+    volumes:
+      - mongo-calendars-data:/data/db
+      - ./database-microservices/init/03-calendars-db.js:/docker-entrypoint-initdb.d/03-calendars-db.js:ro
+    networks:
+      - calendario-network
+
+  mongo-events:
+    image: mongo:7
+    container_name: mongo-events
+    ports:
+      - "27023:27017"
+    volumes:
+      - mongo-events-data:/data/db
+      - ./database-microservices/init/04-events-db.js:/docker-entrypoint-initdb.d/04-events-db.js:ro
+    networks:
+      - calendario-network
+
+  mongo-polls:
+    image: mongo:7
+    container_name: mongo-polls
+    ports:
+      - "27024:27017"
+    volumes:
+      - mongo-polls-data:/data/db
+      - ./database-microservices/init/05-polls-db.js:/docker-entrypoint-initdb.d/05-polls-db.js:ro
+    networks:
+      - calendario-network
+
+  # ── ELK Stack ─────────────────────────────────────────────
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    networks:
+      - calendario-network
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.13.0
+    container_name: logstash
+    ports:
+      - "5044:5044"
+      - "5000:5000/tcp"
+      - "5000:5000/udp"
+      - "9600:9600"
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    volumes:
+      - ./database-microservices/logstash/pipeline:/usr/share/logstash/pipeline:ro
+    depends_on:
+      - elasticsearch
+    networks:
+      - calendario-network
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.13.0
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+    networks:
+      - calendario-network
+
+  # ── Spring Cloud Infrastructure ───────────────────────────
+  eureka-server:
+    build: ./back-end-microservices/eureka-server
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - calendario-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api-gateway:
+    build: ./back-end-microservices/api-gateway
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      - EUREKA_URL=http://eureka-server:8761/eureka
+      - JWT_SECRET=${JWT_SECRET:-your-super-secret-jwt-key-change-this-in-production}
+      - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost:4200}
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+    networks:
+      - calendario-network
+
+  # ── Microservices ─────────────────────────────────────────
+  auth-service:
+    build: ./back-end-microservices/auth-service
+    container_name: auth-service
+    ports:
+      - "8081:8081"
+    environment:
+      - MONGO_URI=mongodb://mongo-auth:27017/calendario-auth
+      - EUREKA_URL=http://eureka-server:8761/eureka
+      - JWT_SECRET=${JWT_SECRET:-your-super-secret-jwt-key-change-this-in-production}
+    depends_on:
+      - mongo-auth
+      - eureka-server
+    networks:
+      - calendario-network
+
+  user-service:
+    build: ./back-end-microservices/user-service
+    container_name: user-service
+    ports:
+      - "8082:8082"
+    environment:
+      - MONGO_URI=mongodb://mongo-users:27017/calendario-users
+      - EUREKA_URL=http://eureka-server:8761/eureka
+      - JWT_SECRET=${JWT_SECRET:-your-super-secret-jwt-key-change-this-in-production}
+    depends_on:
+      - mongo-users
+      - eureka-server
+    networks:
+      - calendario-network
+
+  calendar-service:
+    build: ./back-end-microservices/calendar-service
+    container_name: calendar-service
+    ports:
+      - "8083:8083"
+    environment:
+      - MONGO_URI=mongodb://mongo-calendars:27017/calendario-calendars
+      - EUREKA_URL=http://eureka-server:8761/eureka
+      - JWT_SECRET=${JWT_SECRET:-your-super-secret-jwt-key-change-this-in-production}
+    depends_on:
+      - mongo-calendars
+      - eureka-server
+    networks:
+      - calendario-network
+
+  event-service:
+    build: ./back-end-microservices/event-service
+    container_name: event-service
+    ports:
+      - "8084:8084"
+    environment:
+      - MONGO_URI=mongodb://mongo-events:27017/calendario-events
+      - EUREKA_URL=http://eureka-server:8761/eureka
+      - JWT_SECRET=${JWT_SECRET:-your-super-secret-jwt-key-change-this-in-production}
+    depends_on:
+      - mongo-events
+      - eureka-server
+    networks:
+      - calendario-network
+
+  poll-service:
+    build: ./back-end-microservices/poll-service
+    container_name: poll-service
+    ports:
+      - "8085:8085"
+    environment:
+      - MONGO_URI=mongodb://mongo-polls:27017/calendario-polls
+      - EUREKA_URL=http://eureka-server:8761/eureka
+      - JWT_SECRET=${JWT_SECRET:-your-super-secret-jwt-key-change-this-in-production}
+    depends_on:
+      - mongo-polls
+      - eureka-server
+    networks:
+      - calendario-network
+
+  # ── Front-end (Angular SSR) ────────────────────────────────
+  frontend:
+    build: ./front-end/calendario
+    container_name: frontend
+    ports:
+      - "4000:4000"
+    environment:
+      - PORT=4000
+      - API_URL=http://api-gateway:8080
+    depends_on:
+      - api-gateway
+    networks:
+      - calendario-network
+
+# ── Volumes ────────────────────────────────────────────────
+volumes:
+  mongo-auth-data:
+  mongo-users-data:
+  mongo-calendars-data:
+  mongo-events-data:
+  mongo-polls-data:
+  elasticsearch-data:
+
+# ── Networks ───────────────────────────────────────────────
 networks:
   calendario-network:
     driver: bridge
