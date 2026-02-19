@@ -1,0 +1,15 @@
+services:
+  polls-mongodb:
+    image: mongo:7.0
+    container_name: polls-mongodb
+    ports:
+      - "27018:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - polls-mongo-data:/data/db
+
+volumes:
+  polls-mongo-data:
+
