@@ -1,21 +1,19 @@
-package com.example.calendario.model;
+package com.calendario.poll_service.model;
 
 import java.time.LocalDateTime;
 
 public class InviteLink {
-    private String token; // UUID token
+    private String token;
     private LocalDateTime createdAt;
     private LocalDateTime expiresAt;
 
-    // Constructors
-    public InviteLink() {} // Default constructor (used by Spring Data)
+    public InviteLink() {}
     public InviteLink(String token, LocalDateTime createdAt, LocalDateTime expiresAt) {
         this.token = token;
         this.createdAt = createdAt;
         this.expiresAt = expiresAt;
     }
 
-    // Getters and Setters
     public String getToken() { return token; }
     public void setToken(String token) { this.token = token; }
 

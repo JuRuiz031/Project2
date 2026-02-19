@@ -121,7 +121,7 @@ class PollControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(createDTO)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value("poll-1"))
+                .andExpect(jsonPath("$.poll_id").value("poll-1"))
                 .andExpect(jsonPath("$.calendar_id").value("cal-1"))
                 .andExpect(jsonPath("$.title").value("Best Meeting Time?"));
 
@@ -170,7 +170,7 @@ class PollControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateDTO)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value("poll-1"))
+                .andExpect(jsonPath("$.poll_id").value("poll-1"))
                 .andExpect(jsonPath("$.title").value("Updated Poll Title"));
 
         verify(pollService, times(1)).updatePoll(eq("poll-1"), any(), eq("admin"));
@@ -264,7 +264,7 @@ class PollControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(voteDTO)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value("poll-1"));
+                .andExpect(jsonPath("$.poll_id").value("poll-1"));
 
         verify(pollService, times(1)).voteOnPoll(eq("poll-1"), any(), eq("member"));
     }

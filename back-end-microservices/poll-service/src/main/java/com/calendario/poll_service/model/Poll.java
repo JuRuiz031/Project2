@@ -2,9 +2,11 @@ package com.calendario.poll_service.model;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
@@ -25,6 +27,7 @@ public class Poll {
     private boolean resultsVisible;
     private boolean allowMultipleVotes;
     private List<String> tags = new ArrayList<>();
+    private Set<InviteLink> inviteLinks = new HashSet<>();
     private List<Option> optionsList = new ArrayList<>();
 
     @Transient
@@ -118,6 +121,9 @@ public class Poll {
 
     public List<String> getTags() { return tags; }
     public void setTags(List<String> tags) { this.tags = tags; }
+
+    public Set<InviteLink> getInviteLinks() { return inviteLinks; }
+    public void setInviteLinks(Set<InviteLink> inviteLinks) { this.inviteLinks = inviteLinks; }
 
     public List<Option> getOptions() { return optionsList; }
 
