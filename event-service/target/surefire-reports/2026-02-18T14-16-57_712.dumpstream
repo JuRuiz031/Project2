@@ -1,0 +1,5 @@
+# Created at 2026-02-18T14:16:57.805
+Boot Manifest-JAR contains absolute paths in classpath 'e:\Documents\Ben\Work\Revature\Projects\Project 2 - MicroServices\Project2\back-end-microservices\event-service\target\test-classes'
+Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
+'other' has different root
+
