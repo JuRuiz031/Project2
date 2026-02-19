@@ -205,15 +205,12 @@ services:
     networks:
       - calendario-network
 
-  # ── Front-end (Angular SSR) ────────────────────────────────
+  # ── Front-end (Angular SPA via nginx) ─────────────────────
   frontend:
-    build: ./front-end/calendario
+    build: ./front-end
     container_name: frontend
     ports:
-      - "4000:4000"
-    environment:
-      - PORT=4000
-      - API_URL=http://api-gateway:8080
+      - "4200:80"
     depends_on:
       - api-gateway
     networks:
