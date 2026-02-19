@@ -206,6 +206,21 @@ services:
     networks:
       - calendario-network
 
+  # ── Database Seeder (run manually: docker-compose --profile seed run --rm seeder) ──
+  seeder:
+    build: ./database-microservices/seeder
+    container_name: seeder
+    depends_on:
+      - mongo-auth
+      - mongo-users
+      - mongo-calendars
+      - mongo-events
+      - mongo-polls
+    networks:
+      - calendario-network
+    profiles:
+      - seed
+
   # ── Front-end (Angular SPA via nginx) ─────────────────────
   frontend:
     build: ./front-end
