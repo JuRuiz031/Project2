@@ -3,14 +3,9 @@ package com.calendario.user_service.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.calendario.user_service.dto.UserResponseDTO;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.calendario.user_service.dto.CalendarMembershipDTO;
 import com.calendario.user_service.model.User;
@@ -108,6 +103,17 @@ public class InternalUserController {
                 .orElseThrow(() -> new com.calendario.user_service.exception.ResourceNotFoundException(
                         "User not found with id: " + userId));
 
+        return ResponseEntity.ok(new com.calendario.user_service.dto.UserResponseDTO(
+                user.getId(), user.getUsername(), user.getEmail()));
+    }
+
+    @GetMapping("/users/username/{username}")
+    public ResponseEntity<com.calendario.user_service.dto.UserResponseDTO> findByUsername(
+            @PathVariable String username
+    ) {
+        User user = userService.findByUsername(username)
+                .orElseThrow(() -> new com.calendario.user_service.exception.ResourceNotFoundException(
+                        "User not found with username: " + username));
         return ResponseEntity.ok(new com.calendario.user_service.dto.UserResponseDTO(
                 user.getId(), user.getUsername(), user.getEmail()));
     }
