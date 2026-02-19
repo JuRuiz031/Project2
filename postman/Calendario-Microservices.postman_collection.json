@@ -1,0 +1,420 @@
+{
+  "info": {
+    "name": "Calendario Microservices",
+    "description": "Test collection for all Calendario microservice endpoints.\n\nUsage:\n1. Run '1. Login as Sean' first to get a JWT token\n2. The token is auto-saved to the collection variable {{jwt_token}}\n3. All authenticated requests use it automatically",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "gateway_url", "value": "http://localhost:8080" },
+    { "key": "auth_direct", "value": "http://localhost:8081" },
+    { "key": "user_direct", "value": "http://localhost:8082" },
+    { "key": "calendar_direct", "value": "http://localhost:8083" },
+    { "key": "event_direct", "value": "http://localhost:8084" },
+    { "key": "poll_direct", "value": "http://localhost:8085" },
+    { "key": "jwt_token", "value": "" },
+    { "key": "sean_user_id", "value": "bbb000000000000000000002" },
+    { "key": "ethan_user_id", "value": "bbb000000000000000000003" },
+    { "key": "wizards_calendar_id", "value": "aaa000000000000000000001" }
+  ],
+  "item": [
+    {
+      "name": "0. Health Checks",
+      "item": [
+        {
+          "name": "Eureka Dashboard",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:8761/eureka/apps",
+            "header": [{ "key": "Accept", "value": "application/json" }]
+          }
+        },
+        {
+          "name": "Gateway - direct ping",
+          "request": {
+            "method": "GET",
+            "url": "{{gateway_url}}/actuator/health"
+          }
+        },
+        {
+          "name": "Auth Service - direct ping",
+          "request": {
+            "method": "GET",
+            "url": "{{auth_direct}}/actuator/health"
+          }
+        },
+        {
+          "name": "User Service - direct ping",
+          "request": {
+            "method": "GET",
+            "url": "{{user_direct}}/actuator/health"
+          }
+        },
+        {
+          "name": "Calendar Service - direct ping",
+          "request": {
+            "method": "GET",
+            "url": "{{calendar_direct}}/actuator/health"
+          }
+        },
+        {
+          "name": "Event Service - direct ping",
+          "request": {
+            "method": "GET",
+            "url": "{{event_direct}}/actuator/health"
+          }
+        },
+        {
+          "name": "Poll Service - direct ping",
+          "request": {
+            "method": "GET",
+            "url": "{{poll_direct}}/actuator/health"
+          }
+        }
+      ]
+    },
+    {
+      "name": "1. Auth Service (via Gateway)",
+      "item": [
+        {
+          "name": "Login as Sean",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var json = pm.response.json();",
+                  "    if (json.token) {",
+                  "        pm.collectionVariables.set('jwt_token', json.token);",
+                  "        console.log('JWT token saved!');",
+                  "    }",
+                  "    pm.test('Login successful', function () {",
+                  "        pm.expect(json.token).to.be.a('string');",
+                  "    });",
+                  "} else {",
+                  "    pm.test('Login failed with status ' + pm.response.code, function () {",
+                  "        pm.expect.fail(pm.response.text());",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{gateway_url}}/api/v1/login",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"Sean\",\n  \"password\": \"password\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login as Ethan",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var json = pm.response.json();",
+                  "    if (json.token) {",
+                  "        pm.collectionVariables.set('jwt_token', json.token);",
+                  "    }",
+                  "    pm.test('Login successful', function () {",
+                  "        pm.expect(json.token).to.be.a('string');",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{gateway_url}}/api/v1/login",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"Ethan\",\n  \"password\": \"password\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login - bad password",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Should return 401', function () {",
+                  "    pm.expect(pm.response.code).to.equal(401);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{gateway_url}}/api/v1/login",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"Sean\",\n  \"password\": \"wrongpassword\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Check login status (GET)",
+          "request": {
+            "method": "GET",
+            "url": "{{gateway_url}}/api/v1/login",
+            "header": [{ "key": "Authorization", "value": "Bearer {{jwt_token}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "1b. Auth Service (DIRECT - bypass gateway)",
+      "item": [
+        {
+          "name": "Login as Sean (direct)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var json = pm.response.json();",
+                  "    if (json.token) {",
+                  "        pm.collectionVariables.set('jwt_token', json.token);",
+                  "    }",
+                  "    pm.test('Direct login successful', function () {",
+                  "        pm.expect(json.token).to.be.a('string');",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{auth_direct}}/api/v1/login",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"Sean\",\n  \"password\": \"password\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. User Service (via Gateway)",
+      "item": [
+        {
+          "name": "Get Sean's profile",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', function () {",
+                  "    pm.expect(pm.response.code).to.equal(200);",
+                  "});",
+                  "pm.test('Has username', function () {",
+                  "    pm.expect(pm.response.json().username).to.equal('Sean');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": "{{gateway_url}}/api/v1/users/{{sean_user_id}}",
+            "header": [{ "key": "Authorization", "value": "Bearer {{jwt_token}}" }]
+          }
+        },
+        {
+          "name": "Get Ethan's profile",
+          "request": {
+            "method": "GET",
+            "url": "{{gateway_url}}/api/v1/users/{{ethan_user_id}}",
+            "header": [{ "key": "Authorization", "value": "Bearer {{jwt_token}}" }]
+          }
+        },
+        {
+          "name": "Get nonexistent user (expect 404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 404', function () {",
+                  "    pm.expect(pm.response.code).to.equal(404);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": "{{gateway_url}}/api/v1/users/000000000000000000000000",
+            "header": [{ "key": "Authorization", "value": "Bearer {{jwt_token}}" }]
+          }
+        },
+        {
+          "name": "No auth (expect 401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 401', function () {",
+                  "    pm.expect(pm.response.code).to.equal(401);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": "{{gateway_url}}/api/v1/users/{{sean_user_id}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Calendar Service (via Gateway)",
+      "item": [
+        {
+          "name": "Create a calendar",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    var json = pm.response.json();",
+                  "    if (json.id) {",
+                  "        pm.collectionVariables.set('new_calendar_id', json.id);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{gateway_url}}/api/v1/calendars",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Postman Test Calendar\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get invite link for Wizards",
+          "request": {
+            "method": "GET",
+            "url": "{{gateway_url}}/api/v1/calendars/{{wizards_calendar_id}}/invite",
+            "header": [{ "key": "Authorization", "value": "Bearer {{jwt_token}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Event Service (via Gateway)",
+      "item": [
+        {
+          "name": "Create an event",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    var json = pm.response.json();",
+                  "    if (json.id) {",
+                  "        pm.collectionVariables.set('new_event_id', json.id);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{gateway_url}}/api/v1/events",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"calendarId\": \"{{wizards_calendar_id}}\",\n  \"title\": \"Postman Test Event\",\n  \"startTime\": \"2026-03-01T10:00:00\",\n  \"endTime\": \"2026-03-01T11:00:00\",\n  \"description\": \"Created by Postman\",\n  \"notes\": \"\",\n  \"tags\": [\"test\"]\n}"
+            }
+          }
+        },
+        {
+          "name": "Get events by calendar (direct - internal)",
+          "request": {
+            "method": "GET",
+            "url": "{{event_direct}}/internal/events/by-calendar/{{wizards_calendar_id}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Poll Service (via Gateway)",
+      "item": [
+        {
+          "name": "Create a poll",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    var json = pm.response.json();",
+                  "    if (json.id) {",
+                  "        pm.collectionVariables.set('new_poll_id', json.id);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{gateway_url}}/api/v1/polls",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"calendarId\": \"{{wizards_calendar_id}}\",\n  \"title\": \"Postman Test Poll\",\n  \"description\": \"Testing poll creation\",\n  \"notes\": \"\",\n  \"startTime\": \"2026-03-01T10:00:00\",\n  \"endTime\": \"2026-03-07T10:00:00\",\n  \"resultsVisible\": true,\n  \"allowMultipleVotes\": false,\n  \"tags\": [\"test\"],\n  \"optionsList\": [\n    { \"optionId\": 0, \"description\": \"Option A\", \"userVotes\": [], \"guestVotes\": [] },\n    { \"optionId\": 1, \"description\": \"Option B\", \"userVotes\": [], \"guestVotes\": [] }\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "Get poll by ID (direct - internal)",
+          "request": {
+            "method": "GET",
+            "url": "{{poll_direct}}/api/v1/internal/polls/REPLACE_WITH_POLL_ID"
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. MongoDB Direct Checks",
+      "description": "Use these with mongosh to verify data:\n\nmongosh mongodb://localhost:27020/calendario-auth\nmongosh mongodb://localhost:27021/calendario-users\nmongosh mongodb://localhost:27022/calendario-calendars\nmongosh mongodb://localhost:27023/calendario-events\nmongosh mongodb://localhost:27024/calendario-polls",
+      "item": []
+    }
+  ]
+}

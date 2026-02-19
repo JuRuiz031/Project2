@@ -5,7 +5,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public record CalendarUpdateResponseDTO(
-    @JsonProperty("id") String id,
+    @JsonProperty("calendar_id") String id,
     @JsonProperty("name") String name,
-    @JsonProperty("promoted_admins") List<String> promotedAdmins
+    @JsonProperty("admins") List<String> promotedAdmins
 ) {}

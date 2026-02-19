@@ -2,9 +2,7 @@
 db = db.getSiblingDB('calendario-users');
 
 db.createCollection('users');
-db.users.createIndex({ username: 1 }, { unique: true });
-db.users.createIndex({ email: 1 }, { unique: true });
-db.users.createIndex({ 'calendarIds.calendarId': 1 });
+// Indexes are managed by Spring Data MongoDB (auto-index-creation=true in user-service)
 
 // Fixed ObjectIds (must match across all init scripts)
 const USER_ID = {

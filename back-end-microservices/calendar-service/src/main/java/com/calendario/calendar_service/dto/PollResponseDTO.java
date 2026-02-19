@@ -1,4 +1,4 @@
-package com.calendario.poll_service.dto;
+package com.calendario.calendar_service.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
