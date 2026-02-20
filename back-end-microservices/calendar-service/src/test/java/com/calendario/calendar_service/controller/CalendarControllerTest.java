@@ -93,7 +93,7 @@ class CalendarControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new CalendarCreateRequestDTO("Test Calendar"))))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value("cal-1"))
+                .andExpect(jsonPath("$.calendar_id").value("cal-1"))
                 .andExpect(jsonPath("$.name").value("Test Calendar"));
 
         verify(calendarService, times(1)).createCalendar(any(), eq("admin"));
@@ -136,7 +136,7 @@ class CalendarControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new CalendarUpdateRequestDTO("Updated Calendar", null))))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value("cal-1"))
+                .andExpect(jsonPath("$.calendar_id").value("cal-1"))
                 .andExpect(jsonPath("$.name").value("Updated Calendar"));
 
         verify(calendarService, times(1)).updateCalendar(eq("cal-1"), any(), eq("admin"));
@@ -179,7 +179,7 @@ class CalendarControllerTest {
 
         mockMvc.perform(delete("/api/v1/calendars/cal-1").with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value("cal-1"))
+                .andExpect(jsonPath("$.calendar_id").value("cal-1"))
                 .andExpect(jsonPath("$.deleted").value(true));
 
         verify(calendarService, times(1)).deleteCalendar("cal-1", "admin");
